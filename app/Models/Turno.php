@@ -10,22 +10,21 @@ class Turno extends Model
 
     protected $fillable = [
         'id_negocio',
-        'id_cliente',
+        'id_usuario',
         'id_servicio',
         'fecha',
         'hora_inicio',
         'hora_fin',
-        'estado'
     ];
 
-    public function negocios()
+    public function negocio()
     {
         return $this->belongsTo(Negocio::class, 'id_negocio');
     }
 
-    public function cliente()
+    public function usuario()
     {
-        return $this->belongsTo(Cliente::class, 'id_cliente');
+        return $this->belongsTo(Usuario::class, 'id_usuario');
     }
 
     public function servicio()

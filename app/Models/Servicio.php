@@ -11,8 +11,13 @@ class Servicio extends Model
     protected $fillable = [
         'id_negocio',
         'nombre',
+        'descripcion',
         'duracion',
-        'precio'
+        'precio',
+        'buffer_antes',
+        'buffer_despues',
+        'requiere_seña',
+        'activo'
     ];
 
     public function negocio()

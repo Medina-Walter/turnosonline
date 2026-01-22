@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('telefono')->nullable();
             $table->string('email')->nullable();
             $table->string('direccion')->nullable();
+            $table->string('rubro')->nullable();
             $table->timestamps();
             $table->foreign('id_usuario')->references('id')->on('usuarios')->onDelete('cascade');
         });

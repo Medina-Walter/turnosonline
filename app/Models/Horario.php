@@ -10,12 +10,12 @@ class Horario extends Model
 
     protected $fillable = [
         'id_negocio',
-        'dia',
-        'hora_apertuna',
-        'hora_cierre'
+        'dia_semana',
+        'hora_inicio', 
+        'hora_fin'     
     ];
 
-    public function negocios()
+    public function negocio()
     {
         return $this->belongsTo(Negocio::class, 'id_negocio');
     }

@@ -45,12 +45,11 @@ class TurnoService
 
             return Turno::create([
                 'id_negocio'  => $data['id_negocio'],
-                'id_cliente'  => $data['id_cliente'],
+                'id_usuario'  => $data['id_usuario'],
                 'id_servicio' => $data['id_servicio'],
                 'fecha'       => $data['fecha'],
                 'hora_inicio' => $horaInicio->format('H:i'),
                 'hora_fin'    => $horaFin->format('H:i'),
-                'estado'      => 'pendiente',
             ]);
         });
     }

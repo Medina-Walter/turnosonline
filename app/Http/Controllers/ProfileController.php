@@ -2,43 +2,76 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    public function index(): View
+    {
+        return view('perfil.index');
+    }
+
     /**
-     * Display the user's profile form.
+     * Muestra el formulario para completar nombre y apellido.
+     */
+    public function create(): View
+    {
+        return view('perfil.create');
+    }
+
+    /**
+     * Guarda el nombre y apellido del usuario.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'apellido' => ['required', 'string', 'max:255'],
+        ]);
+
+        $usuario = Auth::user();
+        $usuario->nombre = $request->nombre;
+        $usuario->apellido = $request->apellido;
+        $usuario->save();
+
+        return redirect()->route('turnos.create')
+            ->with('success', 'Perfil actualizado correctamente. Ahora puedes agendar tu turno.');
+    }
+
+
+    /**
+     * Muestra el formulario de edición del perfil.
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
+        return view('perfil.edit', [
+            'usuario' => $request->user(),
         ]);
     }
 
     /**
-     * Update the user's profile information.
+     * Actualiza el perfil completo del usuario.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+        ]);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        $user = Auth::user();
+        $user->nombre = $request->nombre;
+        $user->apellido = $request->apellido;
+        $user->save();
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return redirect()->route('perfil.index')->with('success', 'Perfil actualizado correctamente.');
     }
 
     /**
-     * Delete the user's account.
+     * Elimina la cuenta del usuario.
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -55,6 +88,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return redirect('/');
     }
 }
