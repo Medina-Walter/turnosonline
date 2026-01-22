@@ -21,10 +21,12 @@ class ServicioService
         }
 
         return Servicio::create([
-            'id_negocio' => $data['id_negocio'],
-            'nombre'     => $data['nombre'],
-            'duracion'   => $data['duracion'],
-            'precio'     => $data['precio'],
+            'id_negocio'     => $data['id_negocio'],
+            'nombre'         => $data['nombre'],
+            'duracion'       => $data['duracion'],
+            'precio'         => $data['precio'],
+            'buffer_antes'   => $data['buffer_antes'] ?? 0,
+            'buffer_despues' => $data['buffer_despues'] ?? 0,
         ]);
     }
 

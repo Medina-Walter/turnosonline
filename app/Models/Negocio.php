@@ -14,14 +14,32 @@ class Negocio extends Model
         'nombre',
         'slug',
         'telefono',
-        'email',
-        'direccion'
+        'direccion',
+        'rubro'
     ];
 
-    public function usuario()
+    public function usuarios()
     {
-        return $this->belongsTo(Usuario::class, 'id_usuario');
+        return $this->belongsToMany(
+            Usuario::class,
+            'negocio_usuario',
+            'id_negocio',
+            'id_usuario'
+        )->withPivot('id_rol')->withTimestamps();
     }
+
+    public function negocios()
+    {
+        return $this->belongsToMany(
+            Negocio::class,
+            'negocio_usuario',
+            'id_usuario',
+            'id_negocio'
+        )
+            ->withPivot('id_rol')
+            ->withTimestamps();
+    }
+
 
     public function servicios()
     {
@@ -30,7 +48,7 @@ class Negocio extends Model
 
     public function clientes()
     {
-        return $this->hasMany(Cliente::class, 'id_negocio');   
+        return $this->hasMany(Cliente::class, 'id_negocio');
     }
 
     public function horarios()
@@ -43,5 +61,8 @@ class Negocio extends Model
         return $this->hasMany(Turno::class, 'id_negocio');
     }
 
-}    
-
+    public function dueno()
+    {
+        return $this->belongsTo(Usuario::class, 'id_usuario');
+    }
+}

@@ -15,10 +15,15 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_negocio');
             $table->string('nombre');
+            $table->text('descripcion')->nullable();
             $table->integer('duracion');
             $table->decimal('precio', 10, 2)->nullable();
+            $table->integer('buffer_antes')->nullable();
+            $table->integer('buffer_despues')->nullable();
+            $table->boolean('requiere_seña')->default(false);
             $table->boolean('activo')->default(true);
             $table->timestamps();
+
             $table->foreign('id_negocio')->references('id')->on('negocios')->onDelete('cascade');
         });
     }
