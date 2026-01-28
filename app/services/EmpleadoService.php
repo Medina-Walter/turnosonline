@@ -46,21 +46,22 @@ class EmpleadoService
         Usuario $usuario,
         array $data
     ): void {
-        DB::transaction(function () use ($negocio, $usuario, $data) {
 
-            $rolEmpleado = Rol::where('nombre', 'empleado')->firstOrFail();
+        DB::transaction(function () use ($negocio, $usuario, $data) {
 
             $usuario->update([
                 'nombre'   => $data['nombre'],
                 'apellido' => $data['apellido'],
-                'estado'   => $data['estado'],
+                'estado'   => $data['estado'] ?? $usuario->estado,
             ]);
 
-            $negocio->usuarios()->updateExistingPivot($usuario->id, [
-                'id_rol' => $rolEmpleado->id,
-            ]);
+            $negocio->usuarios()->updateExistingPivot(
+                $usuario->id,
+                ['id_rol' => $data['id_rol']]
+            );
         });
     }
+
 
     public function quitarEmpleadoDelNegocio(
         Negocio $negocio,

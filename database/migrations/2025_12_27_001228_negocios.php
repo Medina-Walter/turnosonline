@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('direccion')->nullable();
             $table->string('rubro')->nullable();
+            $table->boolean('es_sistema')->default(false);
+            $table->string('estado')->default('activo');
             $table->timestamps();
             $table->foreign('id_usuario')->references('id')->on('usuarios')->onDelete('cascade');
         });

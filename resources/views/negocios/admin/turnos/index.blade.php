@@ -11,13 +11,13 @@
 
         <div class="overflow-x-auto">
             <table class="w-full bg-white rounded-xl shadow text-sm">
-                <thead class="border-b text-gray-500">
+                <thead class="bordertext-gray-500">
                     <tr>
-                        <th class="text-center px-6 py-4 text-base font-semibold">Fecha</th>
-                        <th class="text-center px-6 py-4 text-base font-semibold">Hora</th>
-                        <th class="text-center px-6 py-4 text-base font-semibold">Nombre</th>
-                        <th class="text-center px-6 py-4 text-base font-semibold">Apellido</th>
-                        <th class="text-center px-6 py-4 text-base font-semibold">Servicio</th>
+                        <th class="text-center px-6 py-4 text-base">Fecha</th>
+                        <th class="text-center px-6 py-4 text-base">Hora</th>
+                        <th class="text-center px-6 py-4 text-base">Nombre</th>
+                        <th class="text-center px-6 py-4 text-base">Apellido</th>
+                        <th class="text-center px-6 py-4 text-base">Servicio</th>
                     </tr>
                 </thead>
                 <tbody>

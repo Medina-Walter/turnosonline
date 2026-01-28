@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\negocios;
+use App\Models\Negocio;
+
 
 class Usuario extends Authenticatable
 {
@@ -44,5 +45,26 @@ class Usuario extends Authenticatable
     public function rol()
     {
         return $this->belongsTo(Rol::class, 'id_rol');
+    }
+
+    public function esSuperAdmin(): bool
+    {
+        return $this->negocios()
+            ->wherePivotIn('id_rol', function ($q) {
+                $q->select('id')
+                    ->from('roles')
+                    ->where('nombre', 'super_admin');
+            })
+            ->exists();
+    }
+
+    public function rolesPivot()
+    {
+        return $this->belongsToMany(
+            Rol::class,
+            'negocio_usuario',
+            'id_usuario',
+            'id_rol'
+        );
     }
 }

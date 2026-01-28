@@ -32,22 +32,42 @@
             <div class="shadow rounded-xl p-4 mb-6 bg-white">
                 <div class="flex justify-between items-center">
                     <div>
-                        <div class="font-bold text-lg">{{ $negocio->nombre }}
-                            <span class="font-normal text-sm text-gray-500">({{ $negocio->rubro }})</span>
+                        <div class="font-bold text-lg">
+                            {{ $negocio->nombre }}
+                            <span class="font-normal text-gray-800">
+                                ({{ $negocio->rubro }})
+                            </span>
                         </div>
-                        <div class="text-sm text-gray-700">Tel: {{ $negocio->telefono }} | {{ $negocio->direccion }}</div>
+
+                        <div class="text-sm text-gray-800">
+                            Tel: {{ $negocio->telefono }} | {{ $negocio->direccion }}
+                        </div>
                     </div>
-                    <div class="space-x-2">
-                        <a href="{{ route('negocios.edit', $negocio) }}" class="text-indigo-600 hover:underline">Editar</a>
-                        <form action="{{ route('negocios.destroy', $negocio) }}" method="POST" class="inline">
+
+                    <div class="flex gap-2">
+
+                        {{-- Botón editar --}}
+                        <a href="{{ route('negocios.edit', $negocio) }}"
+                            class="inline-flex items-center gap-1 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition">
+                            Editar
+                        </a>
+
+                        {{-- Botón eliminar --}}
+                        <form action="{{ route('negocios.destroy', $negocio) }}" method="POST"
+                            onsubmit="return confirm('¿Seguro que querés eliminar este negocio?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline"
-                                onclick="return confirm('¿Eliminar?')">Eliminar</button>
+
+                            <button type="submit"
+                                class="inline-flex items-center gap-1 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition">
+                                Eliminar
+                            </button>
                         </form>
+
                     </div>
                 </div>
-                <div class="mt-2 text-gray-800">
+
+                <div class="mt-4 text-gray-800">
                     <span class="font-semibold text-gray-800">Horarios:</span>
                     <div class="whitespace-pre-line">
                         @foreach ($dias as $dnum => $dname)

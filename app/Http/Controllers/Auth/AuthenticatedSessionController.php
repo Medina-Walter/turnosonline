@@ -23,26 +23,24 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
-        // Si venía de una acción protegida (reservar turno)
+        // Si venía de una acción protegida
         if (session()->has('url.intended')) {
             return redirect()->intended('/');
         }
 
-        // 2Super admin del sistema
-        if ($user->rol === 'super_admin') {
-            return redirect()->route('admin.dashboard');
+        // 👑 SUPER ADMIN
+        if ($user->esSuperAdmin()) {
+            return redirect()->route('superadmin.dashboard');
         }
 
-        // 3Usuario con negocios (admin o empleado)
+        // 👔 Usuario con negocios
         if ($user->negocios()->exists()) {
             return redirect()->route('negocios.index');
         }
 
-        // Cliente sin contexto → dashboard
+        // Cliente simple
         return redirect()->route('dashboard');
     }
-
-
 
     public function destroy(Request $request): RedirectResponse
     {

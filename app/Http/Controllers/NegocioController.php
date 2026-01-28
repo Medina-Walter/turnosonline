@@ -7,6 +7,8 @@ use App\Models\Horario;
 use App\Models\Rol;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Services\NegocioService;
+
 
 class NegocioController extends Controller
 {
@@ -199,29 +201,32 @@ class NegocioController extends Controller
         return view('negocios.public.show', compact('negocio', 'turnos'));
     }
 
-    public function dashboard(Negocio $negocio)
-    {
+    public function dashboard(
+        Negocio $negocio,
+        NegocioService $negocioService
+    ) {
         abort_if(!auth()->user()->esAdmin($negocio), 403);
 
-        $hoy = Carbon::today();
+        $dias = request('dias', 7);
 
-        $turnosHoy = $negocio->turnos()
-            ->whereDate('fecha', $hoy)
-            ->count();
+        $stats = $negocioService->obtenerStats($negocio, $dias);
 
-        $empleadosCount = $negocio->usuarios()
-            ->wherePivotIn('id_rol', [2, 3]) // admin + empleado
-            ->count();
-
-        $serviciosCount = $negocio->servicios()
-            ->where('activo', true)
-            ->count();
-
-        return view('negocios.admin.dashboard', compact(
-            'negocio',
-            'turnosHoy',
-            'empleadosCount',
-            'serviciosCount'
+        return view('negocios.admin.dashboard', array_merge(
+            ['negocio' => $negocio],
+            $stats
         ));
+    }
+
+    public function dashboardData(
+        Negocio $negocio,
+        NegocioService $negocioService
+    ) {
+        abort_if(!auth()->user()->esAdmin($negocio), 403);
+
+        $dias = request('dias', 7);
+
+        return response()->json(
+            $negocioService->obtenerStats($negocio, $dias)
+        );
     }
 }

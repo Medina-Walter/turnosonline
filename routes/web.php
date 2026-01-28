@@ -8,6 +8,7 @@ use App\Http\Controllers\NegocioController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\TurnoController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
@@ -52,18 +53,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('negocios/{negocio}/servicios/{servicio}/toggle', [ServicioController::class, 'toggleEstado'])->name('negocios.servicios.toggle');
     Route::get('/negocios/{negocio}/turnos', [NegocioController::class, 'turnos'])->name('negocios.negocios-turnos');
 
+
     Route::get('negocios/{negocio}/horarios', [HorarioController::class, 'edit'])->name('negocios.horarios.edit');
     Route::post('negocios/{negocio}/horarios', [HorarioController::class, 'update'])->name('negocios.horarios.update');
 
-    Route::get('/negocios/{negocio}/admin', [NegocioController::class, 'dashboard'])->name('negocios.admin.dashboard');
+    Route::middleware('auth')->prefix('negocios/{negocio}/admin')->name('negocios.admin.')->group(function () {
 
-    Route::middleware('auth')->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    Route::prefix('negocios/{negocio}/admin')->group(function () {
-
-        Route::get('/', [NegocioController::class, 'dashboard'])->name('negocios.admin.dashboard');
-        Route::get('/turnos', [TurnoController::class, 'adminIndex'])->name('negocios.admin.turnos');
-        Route::get('/servicios', [ServicioController::class, 'adminIndex'])->name('negocios.admin.servicios');
+        Route::get('/', [NegocioController::class, 'dashboard'])->name('dashboard');
+        Route::get('/stats', [NegocioController::class, 'dashboardData'])->name('stats');
+        Route::get('/turnos', [TurnoController::class, 'adminIndex'])->name('turnos');
+        Route::get('/servicios', [ServicioController::class, 'adminIndex'])->name('servicios');
+        Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados');
     });
 
     Route::prefix('negocios/{negocio}/admin')->name('negocios.admin.')->group(function () {
@@ -74,6 +74,18 @@ Route::middleware('auth')->group(function () {
         Route::put('/empleados/{usuario}', [EmpleadoController::class, 'update'])->name('empleados.update');
         Route::delete('/empleados/{usuario}', [EmpleadoController::class, 'destroy'])->name('empleados.destroy');
         Route::patch('/empleados/{usuario}/toggle-estado', [EmpleadoController::class, 'toggleEstado'])->name('empleados.toggle-estado');
+    });
+
+    Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('superadmin.')->group(function () {
+
+        Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/negocios', [SuperAdminController::class, 'negocios'])->name('negocios.index');
+        Route::patch('/negocios/{negocio}/toggle', [SuperAdminController::class, 'toggleNegocio'])->name('negocios.toggle');
+        Route::get('/usuarios', [SuperAdminController::class, 'usuarios'])->name('usuarios.index');
+        Route::get('/roles', [SuperAdminController::class, 'roles'])->name('roles.index');
+
+
+        Route::get('/usuarios/{usuario}', [SuperAdminController::class, 'showUsuario'])->name('usuarios.show');
     });
 });
 

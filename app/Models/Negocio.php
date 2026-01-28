@@ -28,19 +28,6 @@ class Negocio extends Model
         )->withPivot('id_rol')->withTimestamps();
     }
 
-    public function negocios()
-    {
-        return $this->belongsToMany(
-            Negocio::class,
-            'negocio_usuario',
-            'id_usuario',
-            'id_negocio'
-        )
-            ->withPivot('id_rol')
-            ->withTimestamps();
-    }
-
-
     public function servicios()
     {
         return $this->hasMany(Servicio::class, 'id_negocio');

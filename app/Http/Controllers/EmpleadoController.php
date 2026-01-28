@@ -71,11 +71,10 @@ class EmpleadoController extends Controller
     {
         abort_if(!auth()->user()->esAdmin($negocio), 403);
 
-        // Verificar que el usuario pertenece al negocio
-        abort_if(
-            ! $negocio->usuarios()->where('usuarios.id', $usuario->id)->exists(),
-            404
-        );
+        $usuario = $negocio->usuarios()
+            ->where('usuarios.id', $usuario->id)
+            ->firstOrFail();
+
 
         $roles = Rol::pluck('nombre', 'id');
 
@@ -89,28 +88,27 @@ class EmpleadoController extends Controller
     public function update(
         Request $request,
         Negocio $negocio,
-        Usuario $usuario
+        Usuario $usuario,
+        EmpleadoService $empleadoService
     ) {
         abort_if(!auth()->user()->esAdmin($negocio), 403);
 
         $request->validate([
-            'nombre'   => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'email'    => 'required|email|unique:usuarios,email,' . $usuario->id,
-            'id_rol'   => 'required|exists:roles,id',
+            'nombre'   => 'string|max:255',
+            'apellido' => 'string|max:255',
+            'email'    => 'email|unique:usuarios,email,' . $usuario->id,
+            'id_rol'   => 'exists:roles,id',
         ]);
 
-        // Actualizar datos del usuario
-        $usuario->update([
-            'nombre'   => $request->nombre,
-            'apellido' => $request->apellido,
-            'email'    => $request->email,
-        ]);
-
-        // Actualizar rol en el negocio
-        $negocio->usuarios()->updateExistingPivot(
-            $usuario->id,
-            ['id_rol' => $request->id_rol]
+        $empleadoService->actualizarEmpleadoEnNegocio(
+            $negocio,
+            $usuario,
+            $request->only(
+                'nombre',
+                'apellido',
+                'estado',
+                'id_rol'
+            )
         );
 
         return redirect()

@@ -57,6 +57,27 @@
                             class="mt-1 w-full rounded-md border-gray-200 bg-gray-100 shadow-sm" disabled>
                     </div>
 
+                    {{-- Rol --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Rol en el negocio
+                        </label>
+
+                        <select name="id_rol"
+                            class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            required>
+
+                            @foreach ($roles as $id => $nombre)
+                                <option value="{{ $id }}"
+                                    {{ optional($usuario->pivot)->id_rol == $id ? 'selected' : '' }}>
+                                    {{ ucfirst($nombre) }}
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+
                     {{-- Botones --}}
                     <div class="flex justify-end gap-3 pt-4">
                         <a href="{{ route('negocios.admin.empleados', $negocio) }}"

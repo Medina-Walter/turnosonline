@@ -22,18 +22,18 @@
         </a>
         <div class="overflow-x-auto rounded-lg">
 
-            <table class="min-w-full divide-y divide-gray-200 bg-white">
+            <table class="bg-white shadow rounded-xl overflow-hidden">
 
                 <thead>
                     <tr>
-                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Nombre</th>
-                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Descripción</th>
-                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Duración</th>
-                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Precio</th>
-                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Buffer antes</th>
-                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Buffer después</th>
-                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Estado</th>
-                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+                        <th class="px-6 py-3 text-center text-xs font-semibold">Nombre</th>
+                        <th class="px-6 py-3 text-center text-xs font-semibold">Descripción</th>
+                        <th class="px-6 py-3 text-center text-xs font-semibold">Duración</th>
+                        <th class="px-6 py-3 text-center text-xs font-semibold">Precio</th>
+                        <th class="px-6 py-3 text-center text-xs font-semibold">Buffer antes</th>
+                        <th class="px-6 py-3 text-center text-xs font-semibold">Buffer después</th>
+                        <th class="px-6 py-3 text-center text-xs font-semibold">Estado</th>
+                        <th class="px-6 py-3 text-center text-xs font-semibold">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">

@@ -26,8 +26,9 @@
             <table class="w-full text-sm">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="p-3 text-left">Nombre</th>
-                        <th class="p-3 text-left">Email</th>
+                        <th class="p-3 text-center">Nombre</th>
+                        <th class="p-3 text-center">Apellido</th>
+                        <th class="p-3 text-center">Email</th>
                         <th class="p-3 text-center">Rol</th>
                         <th class="p-3 text-center">Estado</th>
                         <th class="p-3 text-center">Acciones</th>
@@ -38,12 +39,17 @@
                     @forelse($empleados as $empleado)
                         <tr>
                             {{-- Nombre --}}
-                            <td class="p-3">
-                                {{ $empleado->nombre }} {{ $empleado->apellido }}
+                            <td class="p-3 text-center">
+                                {{ $empleado->nombre }}
+                            </td>
+
+                            {{-- Nombre --}}
+                            <td class="p-3 text-center">
+                                {{ $empleado->apellido }}
                             </td>
 
                             {{-- Email --}}
-                            <td class="p-3">
+                            <td class="p-3 text-center">
                                 {{ $empleado->email }}
                             </td>
 
