@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Auth\Events\Registered;
+use App\Listeners\CreateSuscripcionAfterRegister;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,4 +23,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
+    protected $listen = [
+        Registered::class => [
+            CreateSuscripcionAfterRegister::class,
+        ],
+    ];
 }

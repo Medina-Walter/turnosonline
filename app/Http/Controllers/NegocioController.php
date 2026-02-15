@@ -18,7 +18,7 @@ class NegocioController extends Controller
             ->negocios()
             ->with('horarios')
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('negocios.index', compact('negocios'));
     }
@@ -72,7 +72,8 @@ class NegocioController extends Controller
             'rubro'     => $request->rubro,
         ]);
 
-        $rolAdmin = Rol::where('nombre', 'admin')->first();
+        $rolAdmin = Rol::where('nombre', 'admin')->firstOrFail();
+
 
         $negocio->usuarios()->attach(auth()->id(), [
             'id_rol' => $rolAdmin->id,
@@ -127,10 +128,12 @@ class NegocioController extends Controller
 
         $negocio->update([
             'nombre'    => $request->nombre,
+            'slug'      => str()->slug($request->nombre),
             'rubro'     => $request->rubro,
             'telefono'  => $request->telefono,
             'direccion' => $request->direccion,
         ]);
+
 
         $negocio->horarios()->delete();
 
@@ -193,12 +196,12 @@ class NegocioController extends Controller
         if (auth()->check()) {
             $turnos = auth()->user()
                 ->turnos()
-                ->where('negocio_id', $negocio->id)
+                ->where('id_negocio', $negocio->id)
                 ->orderBy('fecha')
                 ->get();
         }
 
-        return view('negocios.public.show', compact('negocio', 'turnos'));
+        return view('cliente.index', compact('negocio', 'turnos'));
     }
 
     public function dashboard(

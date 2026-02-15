@@ -32,9 +32,14 @@ class NegocioService
     protected function empleadosCount(Negocio $negocio): int
     {
         return $negocio->usuarios()
-            ->wherePivotIn('id_rol', [2, 3])
+            ->wherePivotIn('id_rol', function ($q) {
+                $q->select('id')
+                    ->from('roles')
+                    ->whereIn('nombre', ['admin', 'empleado']);
+            })
             ->count();
     }
+
 
     protected function serviciosCount(Negocio $negocio): int
     {

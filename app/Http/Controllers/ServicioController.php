@@ -33,7 +33,6 @@ class ServicioController extends Controller
             'buffer_despues' => 'nullable|integer|min:0|max:60',
         ]);
 
-        // Completa los datos con el negocio, porque lo tienes en URL
         $datos = $request->all();
         $datos['id_negocio'] = $negocio->id;
 
@@ -75,13 +74,11 @@ class ServicioController extends Controller
     public function desactivar(Negocio $negocio, Servicio $servicio)
     {
         $servicio->update(['activo' => 0]);
-        return redirect()->route('negocios.servicios.index', $negocio)
-            ->with('success', 'El servicio fue desactivado correctamente.');
+        return redirect()->route('negocios.servicios.index', $negocio)->with('success', 'El servicio fue desactivado correctamente.');
     }
 
     public function toggleEstado(Negocio $negocio, Servicio $servicio)
     {
-        // Opcional: Verifica que el servicio pertenezca al negocio
         if ($servicio->id_negocio !== $negocio->id) {
             abort(404);
         }
@@ -89,8 +86,7 @@ class ServicioController extends Controller
         $servicio->activo = !$servicio->activo;
         $servicio->save();
 
-        return redirect()->route('negocios.servicios.index', $negocio)
-            ->with('success', 'El estado del servicio fue actualizado correctamente.');
+        return redirect()->route('negocios.servicios.index', $negocio)->with('success', 'El estado del servicio fue actualizado correctamente.');
     }
 
     public function adminIndex(Negocio $negocio)

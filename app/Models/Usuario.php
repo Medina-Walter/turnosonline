@@ -11,6 +11,11 @@ class Usuario extends Authenticatable
 {
     protected $table = 'usuarios';
 
+    protected $casts = [
+        'is_superadmin' => 'boolean',
+    ];
+
+
     protected $fillable = [
         'nombre',
         'apellido',
@@ -22,6 +27,11 @@ class Usuario extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function turnos()
+    {
+        return $this->hasMany(Turno::class, 'id_usuario');
+    }
 
     public function negocios()
     {
@@ -42,21 +52,12 @@ class Usuario extends Authenticatable
             ->exists();
     }
 
-    public function rol()
-    {
-        return $this->belongsTo(Rol::class, 'id_rol');
-    }
-
     public function esSuperAdmin(): bool
     {
-        return $this->negocios()
-            ->wherePivotIn('id_rol', function ($q) {
-                $q->select('id')
-                    ->from('roles')
-                    ->where('nombre', 'super_admin');
-            })
-            ->exists();
+        return (bool) $this->is_superadmin;
     }
+
+
 
     public function rolesPivot()
     {
@@ -65,6 +66,28 @@ class Usuario extends Authenticatable
             'negocio_usuario',
             'id_usuario',
             'id_rol'
-        );
+        )
+            ->withPivot('id_negocio')
+            ->withTimestamps();
+    }
+
+    public function rolEnNegocio(Negocio $negocio)
+    {
+        return $this->rolesPivot
+            ->where('pivot.id_negocio', $negocio->id)
+            ->first();
+    }
+
+    public function suscripcion()
+    {
+        return $this->hasOne(Suscripcion::class, 'id_usuario');
+    }
+
+
+
+
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
     }
 }

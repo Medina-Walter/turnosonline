@@ -26,6 +26,13 @@ return new class extends Migration
                 'bloqueado'
             ])->default('activo');
 
+            $table->foreignId('id_rol')
+                ->nullable()
+                ->constrained('roles');
+
+            $table->boolean('is_superadmin')
+            ->default(false);
+
             $table->timestamps();
             $table->softDeletes();
         });

@@ -68,8 +68,8 @@
                                 @if ($turno->estado === 'pendiente')
                                     <form method="POST" action="{{ route('turnos.cancelar', $turno->id) }}">
                                         @csrf
-                                        <button type="submit" class="text-xs text-red-600 hover:underline"
-                                            onclick="return confirm('¿Seguro de cancelar este turno?')">
+                                        <button type="submit" onclick="return confirm('¿Seguro de cancelar este turno?')"
+                                            class="border border-red-600 text-red-600 px-3 py-1 rounded-md text-xs font-semibold">
                                             Cancelar
                                         </button>
                                     </form>

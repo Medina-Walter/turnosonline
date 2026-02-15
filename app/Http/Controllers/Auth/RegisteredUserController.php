@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Models\Plan;
+use App\Models\Suscripcion;
+
 
 class RegisteredUserController extends Controller
 {
@@ -39,6 +42,17 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // 👉 PLAN GRATIS AUTOMÁTICO
+        $planGratis = Plan::where('slug', 'gratis')->first();
+
+        if ($planGratis) {
+            $user->suscripcion()->create([
+                'id_plan' => $planGratis->id,
+                'inicia_en' => now(),
+                'vence_en' => now()->addMonth(),
+                'estado' => 'activa',
+            ]);
+        }
 
         event(new Registered($user));
 

@@ -13,7 +13,7 @@ class ClienteController extends Controller
             ->where('id_usuario', auth()->id())
             ->orderBy('fecha')
             ->orderBy('hora_inicio')
-            ->get();
+            ->paginate(10);
 
         return view('cliente.index', compact('turnos'));
     }

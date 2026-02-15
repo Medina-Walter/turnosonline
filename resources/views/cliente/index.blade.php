@@ -49,7 +49,8 @@
                             <td class="text-center py-2">
                                 <form method="POST" action="{{ route('turnos.cancelar', $turno->id) }}">
                                     @csrf
-                                    <button type="submit" class=" text-red-800"
+                                    <button type="submit"
+                                        class="inline-flex items-center gap-1 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition"
                                         onclick="return confirm('¿Seguro de cancelar este turno?')">
                                         Cancelar
                                     </button>

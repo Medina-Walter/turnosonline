@@ -7,6 +7,11 @@
             Usuarios del sistema
         </h1>
 
+        <a href="{{ route('superadmin.dashboard') }}"
+            class="inline-block w-36 text-center bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 mb-4">
+            Volver
+        </a>
+
         <div class="bg-white shadow rounded-lg overflow-hidden">
 
             <table class="w-full">
@@ -18,7 +23,7 @@
                         <th class="p-3 text-center">Email</th>
                         <th class="p-3 text-center">Estado</th>
                         <th class="p-3 text-center">Negocios</th>
-                        <th></th>
+                        <th class="p-3 text-center">Acciones</th>
                     </tr>
                 </thead>
 
@@ -50,10 +55,26 @@
 
                             <td class="p-3 text-center">
 
-                                <a href="{{ route('super_admin.usuarios.show', $usuario->id) }}"
-                                    class="text-indigo-600 hover:underline">
-                                    Ver
+                                <form action="{{ route('superadmin.usuarios.toggle', $usuario) }}" method="POST"
+                                    class="inline">
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <button
+                                        class="inline-flex items-center rounded-md bg-yellow-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-yellow-600"
+                                        onclick="return confirm('¿Cambiar estado del usuario?')">
+
+                                        {{ $usuario->estado === 'activo' ? 'Desactivar' : 'Activar' }}
+
+                                    </button>
+
+                                </form>
+
+                                <a href="{{ route('superadmin.usuarios.show', $usuario->id) }}"
+                                    class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700">
+                                    Ver Detalles
                                 </a>
+
                             </td>
                         </tr>
                     @endforeach

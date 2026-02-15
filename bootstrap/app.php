@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckPlan;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // 👇 REGISTRAMOS ALIAS
         $middleware->alias([
             'super_admin' => SuperAdminMiddleware::class,
+            'plan' => CheckPlan::class,
+            'profile.completed' => \App\Http\Middleware\EnsureProfileCompleted::class,
+            'superadmin' => \App\Http\Middleware\SuperAdminMiddleware::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

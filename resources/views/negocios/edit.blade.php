@@ -3,7 +3,7 @@
 @section('content')
     <div class="w-full bg-white rounded-2xl shadow-xl items-center justify-center p-10">
         <div class="mb-8">
-            <a href="{{ route('cliente.dashboard') }}"
+            <a href="{{ route('negocios.index') }}"
                 class="block w-36 text-center bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 mb-4">
                 Volver
             </a>

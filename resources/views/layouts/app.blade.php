@@ -16,7 +16,7 @@
                 Turnos Online
             </span>
 
-            <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2">
                 <a href="{{ route('cliente.index') }}"
                     class="bg-white text-indigo-600 px-4 py-2 rounded-lg font-semibold hover:bg-indigo-100 transition">
                     Mis Turnos
@@ -30,23 +30,42 @@
                 @auth
                     <details class="relative">
                         <summary class="flex items-center gap-2 cursor-pointer focus:outline-none list-none select-none">
+
                             <!-- Icono usuario -->
                             <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="8" r="4" />
                                 <path d="M16 20H8a2 2 0 0 1-2-2v-2a4 4 0 0 1 8 0v2a2 2 0 0 1-2 2z" />
                             </svg>
+
                             <span class="font-semibold text-white">{{ Auth::user()->nombre }}</span>
+
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                             </svg>
                         </summary>
+
                         <div class="absolute right-0 mt-2 w-48 bg-white text-gray-600 rounded-lg shadow-lg z-30">
+
                             <a href="{{ route('perfil.index') }}"
                                 class="block px-4 py-3 hover:bg-indigo-50 font-medium rounded-t-lg">
                                 Mi perfil
                             </a>
+
+                            <a href="{{ route('suscripcion.index') }}"
+                                class="block px-4 py-3 hover:bg-indigo-50 font-medium">
+                                Mejorar suscripción
+                            </a>
+
+                            {{-- SOLO SUPERADMIN --}}
+                            @if (auth()->user()->esSuperAdmin())
+                                <a href="{{ route('superadmin.dashboard') }}"
+                                    class="block px-4 py-2 text-indigo-600 font-semibold hover:bg-gray-100">
+                                    Panel administrador
+                                </a>
+                            @endif
+
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit"
@@ -61,8 +80,8 @@
         </div>
     </nav>
 
+    <main class="max-w-7xl mx-auto mt-8 px-4">
 
-    <main class="max-w-4xl mx-auto mt-8 px-4">
 
         @if (session('success'))
             <div class="mb-4 rounded bg-green-100 text-green-800 p-3">
@@ -82,6 +101,9 @@
 
         @yield('content')
     </main>
+
+    {{-- Scripts agregados desde vistas --}}
+    @stack('scripts')
 
 </body>
 

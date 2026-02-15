@@ -2,32 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Horario;
 use App\Models\Negocio;
 use App\Models\Servicio;
 use App\Models\Turno;
 use App\Services\TurnoService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Exception;
 
 class TurnoController extends Controller
 {
-    // En el método del controlador:
     public function index()
     {
         $turnos = Turno::with(['negocio', 'servicio'])
             ->where('id_usuario', auth()->id())
             ->orderBy('fecha')
             ->orderBy('hora_inicio')
-            ->get();
+            ->paginate(10);
         return view('cliente.index', compact('turnos'));
     }
 
-    /**
-     * Muestra el formulario para crear un nuevo turno.
-     */
     public function create()
     {
         $user = auth()->user();
+
         if (empty($user->nombre) || empty($user->apellido)) {
             return redirect()
                 ->route('perfil.create')
@@ -40,24 +39,14 @@ class TurnoController extends Controller
         ]);
     }
 
-    /**
-     * Guarda un turno nuevo.
-     */
     public function store(Request $request, TurnoService $service)
     {
-        $user = auth()->user();
-        if (empty($user->nombre) || empty($user->apellido)) {
-            return redirect()
-                ->route('perfil.create')
-                ->with('status', 'perfil-incomplete');
-        }
-
         $request->validate([
             'id_negocio'  => 'required|exists:negocios,id',
             'id_servicio' => 'required|exists:servicios,id',
             'fecha'       => 'required|date',
             'hora_inicio' => 'required|date_format:H:i',
-            'hora_fin' => 'nullable|date_format:H:i',
+            'hora_fin'    => 'nullable|date_format:H:i',
         ]);
 
         try {
@@ -72,6 +61,7 @@ class TurnoController extends Controller
             }
 
             $data['estado'] = $data['estado'] ?? 'pendiente';
+
             $service->crear($data);
 
             return redirect()->route('turnos.index')->with('success', 'Turno Asignado.');
@@ -79,6 +69,7 @@ class TurnoController extends Controller
             return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
     }
+
 
     public function cancelar(Turno $turno)
     {
@@ -98,5 +89,37 @@ class TurnoController extends Controller
             ->get();
 
         return view('negocios.admin.turnos.index', compact('negocio', 'turnos'));
+    }
+
+    public function disponibilidad($negocioId, $fecha)
+    {
+        $fechaCarbon = Carbon::parse($fecha);
+
+        $diaSemana = $fechaCarbon->dayOfWeek; // 0 domingo
+
+        // buscar horario del negocio
+        $horario = Horario::where('id_negocio', $negocioId)
+            ->where('dia_semana', $diaSemana)
+            ->first();
+
+        // cerrado
+        if (!$horario) {
+            return response()->json([
+                'cerrado' => true,
+                'ocupados' => []
+            ]);
+        }
+
+        // turnos existentes
+        $ocupados = Turno::where('id_negocio', $negocioId)
+            ->whereDate('fecha', $fecha)
+            ->get(['hora_inicio', 'hora_fin']);
+
+        return response()->json([
+            'cerrado' => false,
+            'hora_inicio' => $horario->hora_inicio,
+            'hora_fin'    => $horario->hora_fin,
+            'ocupados'    => $ocupados
+        ]);
     }
 }

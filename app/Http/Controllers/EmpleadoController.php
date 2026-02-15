@@ -10,39 +10,22 @@ use App\Models\Rol;
 
 class EmpleadoController extends Controller
 {
-    /**
-     * Listar empleados del negocio
-     */
     public function index(Negocio $negocio)
     {
-        $roles = Rol::pluck('nombre', 'id'); // [id => nombre]
+        $roles = Rol::pluck('nombre', 'id');
 
-        $empleados = $negocio->usuarios()->get();
+        $empleados = $negocio->usuarios()->paginate(10);;
 
-        return view('negocios.admin.empleados.index', compact(
-            'negocio',
-            'empleados',
-            'roles'
-        ));
+        return view('negocios.admin.empleados.index', compact('negocio','empleados','roles'));
     }
 
-
-    /**
-     * Formulario crear empleado
-     */
     public function create(Negocio $negocio)
     {
         abort_if(!auth()->user()->esAdmin($negocio), 403);
 
-        return view(
-            'negocios.admin.empleados.create',
-            compact('negocio')
-        );
+        return view('negocios.admin.empleados.create',compact('negocio'));
     }
 
-    /**
-     * Guardar empleado
-     */
     public function store(
         Request $request,
         Negocio $negocio,
@@ -57,14 +40,10 @@ class EmpleadoController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        $empleadoService->crearEmpleadoParaNegocio(
-            $negocio,
-            $request->only('nombre', 'apellido', 'email', 'password')
+        $empleadoService->crearEmpleadoParaNegocio($negocio, $request->only('nombre', 'apellido', 'email', 'password')
         );
 
-        return redirect()
-            ->route('negocios.admin.empleados', $negocio)
-            ->with('success', 'Empleado agregado correctamente');
+        return redirect()->route('negocios.admin.empleados', $negocio)->with('success', 'Empleado agregado correctamente');
     }
 
     public function edit(Negocio $negocio, Usuario $usuario)
@@ -75,14 +54,9 @@ class EmpleadoController extends Controller
             ->where('usuarios.id', $usuario->id)
             ->firstOrFail();
 
-
         $roles = Rol::pluck('nombre', 'id');
 
-        return view('negocios.admin.empleados.edit', compact(
-            'negocio',
-            'usuario',
-            'roles'
-        ));
+        return view('negocios.admin.empleados.edit', compact('negocio','usuario','roles'));
     }
 
     public function update(
@@ -103,22 +77,12 @@ class EmpleadoController extends Controller
         $empleadoService->actualizarEmpleadoEnNegocio(
             $negocio,
             $usuario,
-            $request->only(
-                'nombre',
-                'apellido',
-                'estado',
-                'id_rol'
-            )
-        );
+            $request->only('nombre','apellido','estado','id_rol')
+            );
 
-        return redirect()
-            ->route('negocios.admin.empleados', $negocio)
-            ->with('success', 'Empleado actualizado correctamente');
+        return redirect()->route('negocios.admin.empleados', $negocio)->with('success', 'Empleado actualizado correctamente');
     }
 
-    /**
-     * Quitar empleado del negocio
-     */
     public function destroy(Negocio $negocio, Usuario $usuario)
     {
         abort_if(!auth()->user()->esAdmin($negocio), 403);
@@ -132,21 +96,13 @@ class EmpleadoController extends Controller
     {
         abort_if(!auth()->user()->esAdmin($negocio), 403);
 
-        // Verificar que el usuario pertenece al negocio
-        abort_if(
-            ! $negocio->usuarios()->where('usuarios.id', $usuario->id)->exists(),
-            404
+        abort_if(! $negocio->usuarios()->where('usuarios.id', $usuario->id)->exists(), 404
         );
 
-        $usuario->estado = $usuario->estado === 'activo'
-            ? 'inactivo'
-            : 'activo';
+        $usuario->estado = $usuario->estado === 'activo' ? 'inactivo' : 'activo';
 
         $usuario->save();
 
-        return back()->with(
-            'success',
-            'Estado del empleado actualizado correctamente'
-        );
+        return back()->with('success','Estado del empleado actualizado correctamente');
     }
 }

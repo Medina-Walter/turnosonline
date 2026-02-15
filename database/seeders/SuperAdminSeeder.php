@@ -12,24 +12,15 @@ class SuperAdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $usuario = Usuario::firstOrCreate(
-            ['email' => 'admin@sistema.com'],
+        Usuario::updateOrCreate(
+            ['email' => 'waltermedina1357@gmail.com'],
             [
-                'nombre' => 'Super',
-                'apellido' => 'Admin',
-                'password' => Hash::make('password'),
+                'nombre' => 'Walter',
+                'apellido' => 'Medina',
+                'password' => Hash::make('ClaveLarga'),
                 'estado' => 'activo',
+                'is_superadmin' => true,
             ]
         );
-
-        $rol = Rol::where('nombre', 'super_admin')->firstOrFail();
-
-        $negocioSistema = Negocio::where('slug', 'sistema')->firstOrFail();
-
-        $usuario->negocios()->syncWithoutDetaching([
-            $negocioSistema->id => [
-                'id_rol' => $rol->id,
-            ]
-        ]);
     }
 }

@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         // Cliente simple
-        return redirect()->route('dashboard');
+        return redirect()->route('cliente.index');
     }
 
     public function destroy(Request $request): RedirectResponse

@@ -14,17 +14,11 @@ class ProfileController extends Controller
         return view('perfil.index');
     }
 
-    /**
-     * Muestra el formulario para completar nombre y apellido.
-     */
     public function create(): View
     {
         return view('perfil.create');
     }
 
-    /**
-     * Guarda el nombre y apellido del usuario.
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -37,9 +31,13 @@ class ProfileController extends Controller
         $usuario->apellido = $request->apellido;
         $usuario->save();
 
-        return redirect()->route('turnos.create')
-            ->with('success', 'Perfil actualizado correctamente. Ahora puedes agendar tu turno.');
+        $redirect = session('redirect_to');
+
+        session()->forget('redirect_to');
+
+        return $redirect ? redirect($redirect) : redirect()->route('turnos.create')->with('success', 'Perfil actualizado correctamente.');
     }
+
 
 
     /**
@@ -58,7 +56,7 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:255',
+            'nombre'   => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
         ]);
 
@@ -67,8 +65,15 @@ class ProfileController extends Controller
         $user->apellido = $request->apellido;
         $user->save();
 
-        return redirect()->route('perfil.index')->with('success', 'Perfil actualizado correctamente.');
+        $redirect = session('redirect_to');
+
+        session()->forget('redirect_to');
+
+        return $redirect
+            ? redirect($redirect)->with('success', 'Perfil actualizado correctamente.')
+            : redirect()->route('perfil.index')->with('success', 'Perfil actualizado correctamente.');
     }
+
 
     /**
      * Elimina la cuenta del usuario.
