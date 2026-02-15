@@ -58,8 +58,14 @@ class SuscripcionController extends Controller
             );
 
             return redirect($preference->init_point);
+        } catch (\MercadoPago\Exceptions\MPApiException $e) {
+            // Esto te mostrará el JSON exacto con el motivo del rechazo (ej: "invalid token")
+            dd([
+                'codigo' => $e->getApiResponse()->getStatusCode(),
+                'detalle' => $e->getApiResponse()->getContent(),
+            ]);
         } catch (\Exception $e) {
-            dd($e->getMessage(), $e->getTrace());
+            dd($e->getMessage());
         }
     }
 

@@ -175,6 +175,4 @@ Route::get('/negocios/{slug}', [NegocioPublicController::class, 'show'])->name('
 Route::get('/negocios/{slug}/reservar', [ReservaPublicController::class, 'create'])->name('reservas.public.create');
 Route::post('/negocios/{slug}/reservar', [ReservaPublicController::class, 'store'])->name('reservas.public.store');
 
-Route::post('/webhook/mercadopago', [WebhookController::class, 'mercadopago']);
-
 require __DIR__ . '/auth.php';
